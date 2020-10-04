@@ -1,7 +1,6 @@
 import React from 'react'
-import { Redirect, Route } from 'react-router-dom'
+import { Redirect, Route, useLocation } from 'react-router-dom'
 import { IonApp, IonRouterOutlet, IonSplitPane } from '@ionic/react'
-import { IonReactRouter } from '@ionic/react-router'
 
 import MainTabs from './components/MainTabs'
 import Menu from './components/Menu'
@@ -26,23 +25,32 @@ import '@ionic/react/css/display.css'
 /* Theme variables */
 import './theme/variables.css'
 
-const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
+/* Track pageviews */
+const PageViews = (): void => {
+  let location = useLocation()
+  React.useEffect(() => {
+    // ga('send', 'pageview', location.pathname)
+  }, [location])
+}
+
+const App: React.FC = () => {
+  PageViews()
+  return (
+    <IonApp>
       <IonSplitPane contentId="main">
         <Menu />
         <IonRouterOutlet id="main">
-          <Route path="/tabs" component={MainTabs} />
           <Route
             path="/"
             render={() => <Redirect to="/tabs/tab1" />}
             exact={true}
           />
+          <Route path="/tabs" component={MainTabs} />
           <Route path="/contact" component={Contact} />
         </IonRouterOutlet>
       </IonSplitPane>
-    </IonReactRouter>
-  </IonApp>
-)
+    </IonApp>
+  )
+}
 
 export default App
